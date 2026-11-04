@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FuentesEstadoSeeder::class,
             ParametrosSeeder::class,
+            FeriadosSeeder::class,
         ]);
     }
 }

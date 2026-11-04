@@ -25,9 +25,10 @@ Si el driver devuelve un solo valor, guardar `compra = venta` y `tipo = referenc
 
 ## Feriados
 
-- **Nager.Date**: `https://date.nager.at/api/v3/PublicHolidays/{anio}/PE`. Gratis. **VERIFICAR** que los feriados nacionales de Perú estén completos.
-- Los **días no laborables y feriados puente** se cargan manualmente según decretos oficiales (ver `04`).
-- Sincronizar una vez al día; nunca borrar feriados manuales al sincronizar.
+- **Nager.Date**: `https://date.nager.at/api/v3/PublicHolidays/{anio}/PE`. Gratis, sin clave. **Confirmado** (documentación oficial Nager.Date v3).
+- Entrega arreglo con `date`, `localName`, `name`, `types`.
+- Los **días no laborables, feriados puente** y feriados nacionales recientes de Perú se completan con carga manual y seeders (ver `04`).
+- Sincronizar una vez al día; **nunca borrar ni sobreescribir registros con `fuente = manual`** al sincronizar.
 
 ## Clima
 

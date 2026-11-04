@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Modules\Dolar\Clients\OpenErApiClient;
 use App\Modules\Dolar\Contracts\ExchangeRateProvider;
+use App\Modules\Feriados\Clients\NagerDateClient;
+use App\Modules\Feriados\Contracts\HolidayProvider;
 use App\Modules\Sismos\Clients\UsgsEarthquakeClient;
 use App\Modules\Sismos\Contracts\EarthquakeProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -49,6 +51,20 @@ class AppServiceProvider extends ServiceProvider
                 default => throw new \InvalidArgumentException("Driver de sismos no soportado: {$driver}"),
             };
         });
+
+        $this->app->bind(HolidayProvider::class, function () {
+            $driver = config('services.feriados.driver', 'nager');
+
+            return match ($driver) {
+                'nager' => new NagerDateClient(
+                    baseUrl: config('services.feriados.nager.base_url'),
+                    timeout: (int) config('services.feriados.nager.timeout', 5),
+                    retryTimes: (int) config('services.feriados.nager.retry_times', 2),
+                    retrySleep: (int) config('services.feriados.nager.retry_sleep', 200),
+                ),
+                default => throw new \InvalidArgumentException("Driver de feriados no soportado: {$driver}"),
+            };
+        });
     }
 
     /**
@@ -63,6 +79,8 @@ class AppServiceProvider extends ServiceProvider
                 \App\Modules\Dolar\Commands\SyncExchangeRatesCommand::class,
                 \App\Modules\Sismos\Commands\SyncSismosCommand::class,
                 \App\Modules\Sismos\Commands\PurgeSismosCommand::class,
+                \App\Modules\Feriados\Commands\AddFeriadoCommand::class,
+                \App\Modules\Feriados\Commands\SyncFeriadosCommand::class,
             ]);
         }
     }

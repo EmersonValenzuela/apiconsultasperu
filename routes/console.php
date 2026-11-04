@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Dolar\Jobs\SyncExchangeRatesJob;
+use App\Modules\Feriados\Jobs\SyncFeriadosJob;
 use App\Modules\Sismos\Jobs\SyncSismosJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -18,3 +19,6 @@ Schedule::job(new SyncSismosJob())->everyFiveMinutes()->name('sync-sismos')->wit
 
 // Scheduler: Módulo Sismos - Purga semanal de eventos mayores a 1 año (docs/04)
 Schedule::command('sismos:purgar')->weekly()->name('purge-old-sismos');
+
+// Scheduler: Módulo Feriados (sincronización diaria docs/02)
+Schedule::job(new SyncFeriadosJob())->daily()->name('sync-feriados')->withoutOverlapping();

@@ -1,0 +1,110 @@
+[
+  {
+    "date": "2026-01-01",
+    "localName": "Año Nuevo",
+    "name": "New Year's Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-04-02",
+    "localName": "Jueves Santo",
+    "name": "Maundy Thursday",
+    "countryCode": "PE",
+    "fixed": false,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-04-03",
+    "localName": "Viernes Santo",
+    "name": "Good Friday",
+    "countryCode": "PE",
+    "fixed": false,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-05-01",
+    "localName": "Día del Trabajo",
+    "name": "Labour Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-06-29",
+    "localName": "San Pedro y San Pablo",
+    "name": "Saint Peter and Saint Paul",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-07-28",
+    "localName": "Fiestas Patrias",
+    "name": "Independence Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-07-29",
+    "localName": "Fiestas Patrias",
+    "name": "Independence Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-08-30",
+    "localName": "Santa Rosa de Lima",
+    "name": "Saint Rose of Lima",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-10-08",
+    "localName": "Combate de Angamos",
+    "name": "Battle of Angamos",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-11-01",
+    "localName": "Todos los Santos",
+    "name": "All Saints' Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-12-08",
+    "localName": "Inmaculada Concepción",
+    "name": "Immaculate Conception",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  },
+  {
+    "date": "2026-12-25",
+    "localName": "Navidad",
+    "name": "Christmas Day",
+    "countryCode": "PE",
+    "fixed": true,
+    "global": true,
+    "types": ["Public"]
+  }
+]

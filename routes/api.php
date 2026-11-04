@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\HealthController;
 use App\Modules\Calculadoras\Http\Controllers\CalculadorasController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
+use App\Modules\Feriados\Http\Controllers\FeriadosController;
 use App\Modules\Sismos\Http\Controllers\SismosController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,5 +53,16 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('igv', [CalculadorasController::class, 'igv'])->name('igv');
         Route::post('gratificacion', [CalculadorasController::class, 'gratificacion'])->name('gratificacion');
         Route::post('cts', [CalculadorasController::class, 'cts'])->name('cts');
+    });
+
+    // Módulo 4: Feriados (caché 24 horas según docs/02)
+    Route::prefix('feriados')->name('feriados.')->group(function () {
+        Route::get('/', [FeriadosController::class, 'index'])
+            ->middleware('cache.public:86400')
+            ->name('index');
+
+        Route::get('proximo', [FeriadosController::class, 'proximo'])
+            ->middleware('cache.public:86400')
+            ->name('proximo');
     });
 });

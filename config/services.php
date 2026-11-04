@@ -59,4 +59,14 @@ return [
         ],
     ],
 
+    'feriados' => [
+        'driver' => env('FERIADOS_DRIVER', 'nager'),
+        'nager' => [
+            'base_url' => env('NAGER_DATE_BASE_URL', 'https://date.nager.at/api/v3'),
+            'timeout' => (int) env('NAGER_DATE_TIMEOUT', 5),
+            'retry_times' => (int) env('NAGER_DATE_RETRY_TIMES', 2),
+            'retry_sleep' => (int) env('NAGER_DATE_RETRY_SLEEP', 200),
+        ],
+    ],
+
 ];
