@@ -45,4 +45,18 @@ return [
         ],
     ],
 
+    'sismos' => [
+        'driver' => env('SISMOS_DRIVER', 'usgs'),
+        'usgs' => [
+            'base_url' => env('USGS_BASE_URL', 'https://earthquake.usgs.gov/fdsnws/event/1/query'),
+            'timeout' => (int) env('USGS_TIMEOUT', 5),
+            'retry_times' => (int) env('USGS_RETRY_TIMES', 2),
+            'retry_sleep' => (int) env('USGS_RETRY_SLEEP', 200),
+            'minlatitude' => (float) env('USGS_MIN_LATITUDE', -19.0),
+            'maxlatitude' => (float) env('USGS_MAX_LATITUDE', 0.5),
+            'minlongitude' => (float) env('USGS_MIN_LONGITUDE', -82.0),
+            'maxlongitude' => (float) env('USGS_MAX_LONGITUDE', -68.0),
+        ],
+    ],
+
 ];

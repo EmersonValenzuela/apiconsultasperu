@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "generated": 1793800000000,
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson",
+    "title": "USGS Earthquakes",
+    "status": 200,
+    "api": "1.14.2",
+    "count": 3
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.8,
+        "place": "45 km SW de Arequipa, Peru",
+        "time": 1793798000000,
+        "updated": 1793799000000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000peru1",
+        "type": "earthquake"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-72.1, -16.8, 35.2]
+      },
+      "id": "us7000peru1"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 5.2,
+        "place": "Near the coast of northern Peru",
+        "time": 1793790000000,
+        "updated": 1793791000000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000peru2",
+        "type": "earthquake"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-80.5, -5.2, 28.0]
+      },
+      "id": "us7000peru2"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.5,
+        "place": "60 km N of Iquique, Chile",
+        "time": 1793780000000,
+        "updated": 1793781000000,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000chile1",
+        "type": "earthquake"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-70.1, -19.5, 40.0]
+      },
+      "id": "us7000chile1"
+    }
+  ]
+}

@@ -16,9 +16,10 @@ Si el driver devuelve un solo valor, guardar `compra = venta` y `tipo = referenc
 
 ## Sismos
 
-- **USGS Earthquake Catalog**: `https://earthquake.usgs.gov/fdsnws/event/1/query` con `format=geojson`.
-- Filtro geográfico inicial (recuadro que cubre Perú; **VERIFICAR** y ajustar): `minlatitude=-19`, `maxlatitude=0.5`, `minlongitude=-82`, `maxlongitude=-68`. Este recuadro incluye zonas de países vecinos: filtrar por el campo `place` o dejar la decisión documentada.
-- Parámetros útiles: `starttime`, `orderby=time`, `minmagnitude`.
+- **USGS Earthquake Catalog**: `https://earthquake.usgs.gov/fdsnws/event/1/query` con `format=geojson`. **Confirmado** (documentación oficial USGS ComCat / FDSN Event Web Service).
+- Filtro geográfico inicial (recuadro que cubre Perú): `minlatitude=-19`, `maxlatitude=0.5`, `minlongitude=-82`, `maxlongitude=-68`.
+- Criterio de filtrado en el cliente/servicio: para descartar eventos en territorios de países limítrofes capturados por el recuadro, se conservan los eventos cuyo campo `place` contenga "Peru", "Perú" o referencias costeras peruanas, y se excluyen explícitamente aquellos que indiquen países vecinos ("Chile", "Ecuador", "Bolivia", "Brazil", "Brasil", "Colombia").
+- Parámetros útiles: `starttime`, `endtime`, `orderby=time`, `minmagnitude`, `limit`.
 - Mapear `properties.mag`, `properties.place`, `properties.time` (milisegundos UNIX), `properties.url`, `geometry.coordinates` (`[lon, lat, profundidad]`).
 - Alternativa futura: datos del IGP (Instituto Geofísico del Perú). **VERIFICAR** si hay una fuente programática y sus términos.
 

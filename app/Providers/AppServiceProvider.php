@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Modules\Dolar\Clients\OpenErApiClient;
 use App\Modules\Dolar\Contracts\ExchangeRateProvider;
+use App\Modules\Sismos\Clients\UsgsEarthquakeClient;
+use App\Modules\Sismos\Contracts\EarthquakeProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -29,6 +31,24 @@ class AppServiceProvider extends ServiceProvider
                 default => throw new \InvalidArgumentException("Driver de dólar no soportado: {$driver}"),
             };
         });
+
+        $this->app->bind(EarthquakeProvider::class, function () {
+            $driver = config('services.sismos.driver', 'usgs');
+
+            return match ($driver) {
+                'usgs' => new UsgsEarthquakeClient(
+                    baseUrl: config('services.sismos.usgs.base_url'),
+                    timeout: (int) config('services.sismos.usgs.timeout', 5),
+                    retryTimes: (int) config('services.sismos.usgs.retry_times', 2),
+                    retrySleep: (int) config('services.sismos.usgs.retry_sleep', 200),
+                    minLatitude: (float) config('services.sismos.usgs.minlatitude', -19.0),
+                    maxLatitude: (float) config('services.sismos.usgs.maxlatitude', 0.5),
+                    minLongitude: (float) config('services.sismos.usgs.minlongitude', -82.0),
+                    maxLongitude: (float) config('services.sismos.usgs.maxlongitude', -68.0),
+                ),
+                default => throw new \InvalidArgumentException("Driver de sismos no soportado: {$driver}"),
+            };
+        });
     }
 
     /**
@@ -37,6 +57,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \App\Modules\Dolar\Commands\SyncExchangeRatesCommand::class,
+                \App\Modules\Sismos\Commands\SyncSismosCommand::class,
+                \App\Modules\Sismos\Commands\PurgeSismosCommand::class,
+            ]);
+        }
     }
 
     /**

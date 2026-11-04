@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
+use App\Modules\Sismos\Http\Controllers\SismosController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,5 +32,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('convertir', [MonedasController::class, 'convertir'])
             ->middleware('cache.public:1800')
             ->name('convertir');
+    });
+
+    // Módulo 2: Sismos
+    Route::prefix('sismos')->name('sismos.')->group(function () {
+        Route::get('/', [SismosController::class, 'index'])
+            ->middleware('cache.public:300')
+            ->name('index');
+
+        Route::get('{id}', [SismosController::class, 'show'])
+            ->whereNumber('id')
+            ->middleware('cache.public:300')
+            ->name('show');
     });
 });
