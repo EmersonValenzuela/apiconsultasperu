@@ -1,0 +1,35 @@
+<?php
+
+use App\Http\Controllers\Api\V1\HealthController;
+use App\Modules\Dolar\Http\Controllers\DolarController;
+use App\Modules\Dolar\Http\Controllers\MonedasController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API v1 — Consulta Hoy Perú
+|--------------------------------------------------------------------------
+| Contrato: docs/03-api-v1.md. Prefijo final: /api/v1.
+*/
+
+Route::prefix('v1')->name('v1.')->group(function () {
+    // Sistema
+    Route::get('health', HealthController::class)->name('health');
+
+    // Módulo 1: Dólar y monedas
+    Route::prefix('dolar')->name('dolar.')->group(function () {
+        Route::get('/', [DolarController::class, 'actual'])
+            ->middleware('cache.public:1800')
+            ->name('actual');
+
+        Route::get('historico', [DolarController::class, 'historico'])
+            ->middleware('cache.public:1800')
+            ->name('historico');
+    });
+
+    Route::prefix('monedas')->name('monedas.')->group(function () {
+        Route::get('convertir', [MonedasController::class, 'convertir'])
+            ->middleware('cache.public:1800')
+            ->name('convertir');
+    });
+});
