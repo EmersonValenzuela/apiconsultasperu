@@ -1,0 +1,1235 @@
+{
+    "openapi": "3.1.2",
+    "info": {
+        "title": "Consulta Hoy Per\u00fa \u2014 API v1",
+        "version": "1.0.0",
+        "description": "API de utilidades e informaci\u00f3n diaria para Per\u00fa (Consulta Hoy Per\u00fa)."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1"
+        }
+    ],
+    "paths": {
+        "/calculadoras/igv": {
+            "post": {
+                "operationId": "v1.calculadoras.igv",
+                "summary": "Calcula el IGV desagregado o total (referencial)",
+                "tags": [
+                    "Calculadoras"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CalcularIgvRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "base": {
+                                                    "type": "number"
+                                                },
+                                                "igv": {
+                                                    "type": "number"
+                                                },
+                                                "total": {
+                                                    "type": "number"
+                                                },
+                                                "tasa": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "base",
+                                                "igv",
+                                                "total",
+                                                "tasa"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "referencial": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "referencial"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/calculadoras/gratificacion": {
+            "post": {
+                "operationId": "v1.calculadoras.gratificacion",
+                "summary": "Calcula la gratificaci\u00f3n legal y bonificaci\u00f3n extraordinaria (referencial)",
+                "tags": [
+                    "Calculadoras"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CalcularGratificacionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "remuneracion_computable": {
+                                                    "type": "number"
+                                                },
+                                                "gratificacion": {
+                                                    "type": "number"
+                                                },
+                                                "bonificacion_extraordinaria": {
+                                                    "type": "number"
+                                                },
+                                                "total": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "remuneracion_computable",
+                                                "gratificacion",
+                                                "bonificacion_extraordinaria",
+                                                "total"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "referencial": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "referencial"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/calculadoras/cts": {
+            "post": {
+                "operationId": "v1.calculadoras.cts",
+                "summary": "Calcula la CTS semestral por meses y d\u00edas (referencial)",
+                "tags": [
+                    "Calculadoras"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CalcularCtsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "remuneracion_computable": {
+                                                    "type": "number"
+                                                },
+                                                "cts_por_meses": {
+                                                    "type": "number"
+                                                },
+                                                "cts_por_dias": {
+                                                    "type": "number"
+                                                },
+                                                "total": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "remuneracion_computable",
+                                                "cts_por_meses",
+                                                "cts_por_dias",
+                                                "total"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "referencial": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "referencial"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/dolar": {
+            "get": {
+                "operationId": "v1.dolar.actual",
+                "summary": "Cotizaci\u00f3n actual del d\u00f3lar frente al sol",
+                "tags": [
+                    "Dolar"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "moneda": {
+                                                    "type": "string"
+                                                },
+                                                "compra": {
+                                                    "type": "number"
+                                                },
+                                                "venta": {
+                                                    "type": "number"
+                                                },
+                                                "fecha": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "moneda",
+                                                "compra",
+                                                "venta",
+                                                "fecha"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                },
+                                                "tipo": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale",
+                                                "tipo"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/dolar/historico": {
+            "get": {
+                "operationId": "v1.dolar.historico",
+                "summary": "Hist\u00f3rico de cotizaciones del d\u00f3lar en un rango de fechas (m\u00e1x. 366 d\u00edas)",
+                "tags": [
+                    "Dolar"
+                ],
+                "parameters": [
+                    {
+                        "name": "desde",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "hasta",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "moneda",
+                        "in": "query",
+                        "schema": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "minLength": 3,
+                            "maxLength": 3
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "fecha": {
+                                                        "type": "string"
+                                                    },
+                                                    "compra": {
+                                                        "type": "number"
+                                                    },
+                                                    "venta": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "fecha",
+                                                    "compra",
+                                                    "venta"
+                                                ]
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "total",
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/feriados": {
+            "get": {
+                "operationId": "v1.feriados.index",
+                "summary": "Lista los feriados y d\u00edas no laborables del a\u00f1o especificado",
+                "tags": [
+                    "Feriados"
+                ],
+                "parameters": [
+                    {
+                        "name": "anio",
+                        "in": "query",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 2025,
+                            "maximum": 2027
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "fecha": {
+                                                        "type": "string"
+                                                    },
+                                                    "nombre": {
+                                                        "type": "string"
+                                                    },
+                                                    "tipo": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "fecha",
+                                                    "nombre",
+                                                    "tipo"
+                                                ]
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "anio": {
+                                                    "type": "integer"
+                                                },
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string",
+                                                    "const": "nager/manual"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "total",
+                                                "anio",
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/feriados/proximo": {
+            "get": {
+                "operationId": "v1.feriados.proximo",
+                "summary": "Devuelve el pr\u00f3ximo feriado a partir de hoy y los d\u00edas que faltan",
+                "tags": [
+                    "Feriados"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": [
+                                                "object",
+                                                "null"
+                                            ],
+                                            "properties": {
+                                                "fecha": {
+                                                    "type": "string"
+                                                },
+                                                "nombre": {
+                                                    "type": "string"
+                                                },
+                                                "tipo": {
+                                                    "type": "string"
+                                                },
+                                                "dias_faltantes": {}
+                                            },
+                                            "required": [
+                                                "fecha",
+                                                "nombre",
+                                                "tipo",
+                                                "dias_faltantes"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "actualizado_en": {
+                                                            "type": "string"
+                                                        },
+                                                        "fuente": {
+                                                            "type": "string"
+                                                        },
+                                                        "stale": {
+                                                            "type": "boolean"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "actualizado_en",
+                                                        "fuente",
+                                                        "stale"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "actualizado_en": {
+                                                            "type": "string"
+                                                        },
+                                                        "fuente": {
+                                                            "type": "string",
+                                                            "const": "nager/manual"
+                                                        },
+                                                        "stale": {
+                                                            "type": "boolean"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "actualizado_en",
+                                                        "fuente",
+                                                        "stale"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "operationId": "v1.health",
+                "description": "Devuelve 200 con estado `ok` o `degradado`, y 503 con estado `error` si la base de datos no responde.",
+                "summary": "Estado de la API y de cada m\u00f3dulo",
+                "tags": [
+                    "Health"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/monedas/convertir": {
+            "get": {
+                "operationId": "v1.monedas.convertir",
+                "summary": "Convierte un monto entre dos divisas soportadas",
+                "tags": [
+                    "Monedas"
+                ],
+                "parameters": [
+                    {
+                        "name": "de",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PEN",
+                                "USD",
+                                "EUR",
+                                "GBP",
+                                "BRL",
+                                "CLP",
+                                "COP",
+                                "MXN",
+                                "ARS"
+                            ],
+                            "minLength": 3,
+                            "maxLength": 3
+                        }
+                    },
+                    {
+                        "name": "a",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PEN",
+                                "USD",
+                                "EUR",
+                                "GBP",
+                                "BRL",
+                                "CLP",
+                                "COP",
+                                "MXN",
+                                "ARS"
+                            ],
+                            "minLength": 3,
+                            "maxLength": 3
+                        }
+                    },
+                    {
+                        "name": "monto",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "de": {
+                                                    "type": "string"
+                                                },
+                                                "a": {
+                                                    "type": "string"
+                                                },
+                                                "monto": {
+                                                    "type": "number"
+                                                },
+                                                "resultado": {
+                                                    "type": "number"
+                                                },
+                                                "tasa": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "de",
+                                                "a",
+                                                "monto",
+                                                "resultado",
+                                                "tasa"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/ruc/{ruc}": {
+            "get": {
+                "operationId": "v1.ruc.show",
+                "summary": "Consulta de RUC con validaci\u00f3n de d\u00edgito verificador y failover de fuentes",
+                "tags": [
+                    "Ruc"
+                ],
+                "parameters": [
+                    {
+                        "name": "ruc",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "304": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "codigo": {
+                                                    "type": "string",
+                                                    "const": "no_encontrado"
+                                                },
+                                                "mensaje": {
+                                                    "type": "string",
+                                                    "const": "El RUC solicitado no fue encontrado en el padr\u00f3n de contribuyentes."
+                                                },
+                                                "detalles": {
+                                                    "type": "null"
+                                                }
+                                            },
+                                            "required": [
+                                                "codigo",
+                                                "mensaje",
+                                                "detalles"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "error"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/sismos": {
+            "get": {
+                "operationId": "v1.sismos.index",
+                "summary": "Lista los \u00faltimos sismos en Per\u00fa con filtros por magnitud, d\u00edas y l\u00edmite",
+                "tags": [
+                    "Sismos"
+                ],
+                "parameters": [
+                    {
+                        "name": "min_magnitud",
+                        "in": "query",
+                        "schema": {
+                            "type": [
+                                "number",
+                                "null"
+                            ],
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "dias",
+                        "in": "query",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 1,
+                            "maximum": 30
+                        }
+                    },
+                    {
+                        "name": "limite",
+                        "in": "query",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 1,
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "magnitud": {
+                                                        "type": "number"
+                                                    },
+                                                    "lugar": {
+                                                        "type": "string"
+                                                    },
+                                                    "profundidad_km": {
+                                                        "type": [
+                                                            "number",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "latitud": {
+                                                        "type": "number"
+                                                    },
+                                                    "longitud": {
+                                                        "type": "number"
+                                                    },
+                                                    "ocurrido_en": {
+                                                        "type": "string"
+                                                    },
+                                                    "fuente": {
+                                                        "type": "string"
+                                                    },
+                                                    "url": {
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "magnitud",
+                                                    "lugar",
+                                                    "profundidad_km",
+                                                    "latitud",
+                                                    "longitud",
+                                                    "ocurrido_en",
+                                                    "fuente",
+                                                    "url"
+                                                ]
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string",
+                                                    "const": "USGS"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "total",
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/sismos/{id}": {
+            "get": {
+                "operationId": "v1.sismos.show",
+                "summary": "Detalle de un sismo espec\u00edfico por ID",
+                "tags": [
+                    "Sismos"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "magnitud": {
+                                                    "type": "number"
+                                                },
+                                                "lugar": {
+                                                    "type": "string"
+                                                },
+                                                "profundidad_km": {
+                                                    "type": [
+                                                        "number",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "latitud": {
+                                                    "type": "number"
+                                                },
+                                                "longitud": {
+                                                    "type": "number"
+                                                },
+                                                "ocurrido_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string"
+                                                },
+                                                "url": {
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "magnitud",
+                                                "lugar",
+                                                "profundidad_km",
+                                                "latitud",
+                                                "longitud",
+                                                "ocurrido_en",
+                                                "fuente",
+                                                "url"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "actualizado_en": {
+                                                    "type": "string"
+                                                },
+                                                "fuente": {
+                                                    "type": "string"
+                                                },
+                                                "stale": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "actualizado_en",
+                                                "fuente",
+                                                "stale"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ModelNotFoundException"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "appKey": {
+                "type": "apiKey",
+                "description": "Clave de acceso opcional para la app m\u00f3vil. Sin esta cabecera la API opera con l\u00edmites p\u00fablicos por IP.",
+                "in": "header",
+                "name": "X-App-Key"
+            }
+        },
+        "schemas": {
+            "CalcularCtsRequest": {
+                "type": "object",
+                "properties": {
+                    "sueldo": {
+                        "type": "number"
+                    },
+                    "asignacion_familiar": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "ultima_gratificacion": {
+                        "type": [
+                            "number",
+                            "null"
+                        ],
+                        "minimum": 0
+                    },
+                    "meses": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 6
+                    },
+                    "dias": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 29
+                    },
+                    "promedio_variables": {
+                        "type": [
+                            "number",
+                            "null"
+                        ],
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "sueldo",
+                    "meses",
+                    "dias"
+                ],
+                "title": "CalcularCtsRequest"
+            },
+            "CalcularGratificacionRequest": {
+                "type": "object",
+                "properties": {
+                    "sueldo": {
+                        "type": "number"
+                    },
+                    "asignacion_familiar": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "meses_trabajados": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 6
+                    },
+                    "promedio_variables": {
+                        "type": [
+                            "number",
+                            "null"
+                        ],
+                        "minimum": 0
+                    },
+                    "tipo_seguro": {
+                        "type": "string",
+                        "enum": [
+                            "essalud",
+                            "eps"
+                        ]
+                    }
+                },
+                "required": [
+                    "sueldo",
+                    "meses_trabajados",
+                    "tipo_seguro"
+                ],
+                "title": "CalcularGratificacionRequest"
+            },
+            "CalcularIgvRequest": {
+                "type": "object",
+                "properties": {
+                    "monto": {
+                        "type": "number"
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "enum": [
+                            "base",
+                            "total"
+                        ]
+                    }
+                },
+                "required": [
+                    "monto",
+                    "tipo"
+                ],
+                "title": "CalcularIgvRequest"
+            }
+        },
+        "responses": {
+            "ValidationException": {
+                "description": "Validation error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "Errors overview."
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "description": "A detailed description of each field that failed validation.",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "message",
+                                "errors"
+                            ]
+                        }
+                    }
+                }
+            },
+            "ModelNotFoundException": {
+                "description": "Not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "Error overview."
+                                }
+                            },
+                            "required": [
+                                "message"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

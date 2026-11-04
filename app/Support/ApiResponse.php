@@ -16,6 +16,10 @@ class ApiResponse
 
     public const ERROR_NOT_FOUND = 'no_encontrado';
 
+    public const ERROR_UNAUTHENTICATED = 'no_autenticado';
+
+    public const ERROR_FORBIDDEN = 'no_autorizado';
+
     public const ERROR_RATE_LIMITED = 'limite_excedido';
 
     public const ERROR_SOURCE_UNAVAILABLE = 'fuente_no_disponible';

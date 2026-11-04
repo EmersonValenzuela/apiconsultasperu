@@ -8,6 +8,9 @@ use App\Modules\Feriados\Clients\NagerDateClient;
 use App\Modules\Feriados\Contracts\HolidayProvider;
 use App\Modules\Sismos\Clients\UsgsEarthquakeClient;
 use App\Modules\Sismos\Contracts\EarthquakeProvider;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -73,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
+        $this->configureScramble();
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -86,22 +90,60 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
+    private function configureScramble(): void
+    {
+        if (class_exists(Scramble::class)) {
+            Scramble::configure()
+                ->afterOpenApiGenerated(function (OpenApi $openApi) {
+                    $scheme = SecurityScheme::apiKey('header', 'X-App-Key')
+                        ->as('appKey')
+                        ->setDescription('Clave de acceso opcional para la app móvil. Sin esta cabecera la API opera con límites públicos por IP.');
+
+                    $openApi->components->addSecurityScheme('appKey', $scheme);
+                });
+        }
+    }
+
     /**
-     * Límites por IP (docs/07-seguridad-y-legal.md). Usan el store de caché configurado.
+     * Límites por IP o por clave de cliente autenticado (docs/07-seguridad-y-legal.md).
      */
     private function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute((int) config('api.rate_limits.general'))
+            /** @var \App\Models\ClienteApi|null $client */
+            $client = $request->attributes->get('cliente_api');
+
+            if ($client !== null) {
+                return Limit::perMinute($client->limite_por_minuto)
+                    ->by('cliente_api:'.$client->id);
+            }
+
+            return Limit::perMinute((int) config('api.rate_limits.general', 60))
                 ->by($request->ip());
         });
 
         RateLimiter::for('calculadoras', function (Request $request) {
+            /** @var \App\Models\ClienteApi|null $client */
+            $client = $request->attributes->get('cliente_api');
+
+            if ($client !== null) {
+                return Limit::perMinute($client->limite_por_minuto)
+                    ->by('cliente_api:'.$client->id);
+            }
+
             return Limit::perMinute((int) config('api.rate_limits.calculadoras', 30))
                 ->by($request->ip());
         });
 
         RateLimiter::for('ruc', function (Request $request) {
+            /** @var \App\Models\ClienteApi|null $client */
+            $client = $request->attributes->get('cliente_api');
+
+            if ($client !== null) {
+                return Limit::perMinute($client->limite_por_minuto)
+                    ->by('cliente_api:'.$client->id);
+            }
+
             return Limit::perMinute((int) config('api.rate_limits.ruc', 20))
                 ->by($request->ip());
         });
