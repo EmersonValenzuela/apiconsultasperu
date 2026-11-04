@@ -233,6 +233,146 @@
                 }
             }
         },
+        "/dni/validar": {
+            "post": {
+                "operationId": "v1.dni.validar",
+                "summary": "Valida el formato de un DNI (8 d\u00edgitos) sin consultar ninguna fuente externa",
+                "tags": [
+                    "Dni"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ValidarDniRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "dni": {
+                                                    "type": "string"
+                                                },
+                                                "valido": {
+                                                    "type": "boolean"
+                                                },
+                                                "formato": {
+                                                    "type": "string",
+                                                    "const": "DNI est\u00e1ndar (8 d\u00edgitos)"
+                                                }
+                                            },
+                                            "required": [
+                                                "dni",
+                                                "valido",
+                                                "formato"
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/dni/consulta": {
+            "post": {
+                "operationId": "v1.dni.consulta",
+                "summary": "Consulta los datos de un DNI bajo demanda con verificaci\u00f3n de captcha Turnstile",
+                "tags": [
+                    "Dni"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConsultarDniRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "dni_enmascarado": {
+                                                            "type": "string"
+                                                        },
+                                                        "nombres": {
+                                                            "type": "string"
+                                                        },
+                                                        "apellido_paterno": {
+                                                            "type": "string"
+                                                        },
+                                                        "apellido_materno": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "dni_enmascarado",
+                                                        "nombres",
+                                                        "apellido_paterno",
+                                                        "apellido_materno"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "string"
+                                                }
+                                            ]
+                                        },
+                                        "meta": {
+                                            "type": "array",
+                                            "items": {}
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "meta"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFoundHttpException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
         "/dolar": {
             "get": {
                 "operationId": "v1.dolar.actual",
@@ -1178,6 +1318,36 @@
                     "tipo"
                 ],
                 "title": "CalcularIgvRequest"
+            },
+            "ConsultarDniRequest": {
+                "type": "object",
+                "properties": {
+                    "dni": {
+                        "type": "string",
+                        "pattern": "^[0-9]{8}$"
+                    },
+                    "captcha_token": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "dni",
+                    "captcha_token"
+                ],
+                "title": "ConsultarDniRequest"
+            },
+            "ValidarDniRequest": {
+                "type": "object",
+                "properties": {
+                    "dni": {
+                        "type": "string",
+                        "pattern": "^[0-9]{8}$"
+                    }
+                },
+                "required": [
+                    "dni"
+                ],
+                "title": "ValidarDniRequest"
             }
         },
         "responses": {
@@ -1212,6 +1382,25 @@
                 }
             },
             "ModelNotFoundException": {
+                "description": "Not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "Error overview."
+                                }
+                            },
+                            "required": [
+                                "message"
+                            ]
+                        }
+                    }
+                }
+            },
+            "NotFoundHttpException": {
                 "description": "Not found",
                 "content": {
                     "application/json": {

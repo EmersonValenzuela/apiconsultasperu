@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Modules\Calculadoras\Http\Controllers\CalculadorasController;
+use App\Modules\Dni\Http\Controllers\DniController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
 use App\Modules\Feriados\Http\Controllers\FeriadosController;
@@ -71,4 +72,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('ruc/{ruc}', [RucController::class, 'show'])
         ->middleware('throttle:ruc')
         ->name('ruc.show');
+
+    // Módulo 8: DNI (validar siempre disponible, consulta con límite 5/min según docs/07)
+    Route::prefix('dni')->name('dni.')->group(function () {
+        Route::post('validar', [DniController::class, 'validar'])->name('validar');
+        Route::post('consulta', [DniController::class, 'consulta'])
+            ->middleware('throttle:dni')
+            ->name('consulta');
+    });
 });
