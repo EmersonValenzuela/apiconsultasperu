@@ -6,7 +6,6 @@ use App\Models\FuenteEstado;
 use App\Modules\Sismos\Contracts\EarthquakeProvider;
 use App\Modules\Sismos\Models\Sismo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class SismosService
@@ -198,13 +197,10 @@ class SismosService
 
     private function recordSourceHealthError(string $errorMessage): void
     {
-        FuenteEstado::query()->updateOrCreate(
-            ['modulo' => 'sismos'],
-            [
-                'ultimo_error' => now('America/Lima'),
-                'mensaje_error' => $errorMessage,
-                'intentos_fallidos' => DB::raw('intentos_fallidos + 1'),
-            ]
-        );
+        $estado = FuenteEstado::query()->firstOrNew(['modulo' => 'sismos']);
+        $estado->ultimo_error = now('America/Lima');
+        $estado->mensaje_error = $errorMessage;
+        $estado->intentos_fallidos = ($estado->intentos_fallidos ?? 0) + 1;
+        $estado->save();
     }
 }

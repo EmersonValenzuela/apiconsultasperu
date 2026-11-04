@@ -16,6 +16,7 @@ return [
     'rate_limits' => [
         'general' => (int) env('RATE_LIMIT_GENERAL', 60),
         'calculadoras' => (int) env('RATE_LIMIT_CALCULADORAS', 30),
+        'ruc' => (int) env('RATE_LIMIT_RUC', 20),
     ],
 
 ];

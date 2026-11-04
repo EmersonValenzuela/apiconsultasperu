@@ -5,6 +5,7 @@ use App\Modules\Calculadoras\Http\Controllers\CalculadorasController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
 use App\Modules\Feriados\Http\Controllers\FeriadosController;
+use App\Modules\Ruc\Http\Controllers\RucController;
 use App\Modules\Sismos\Http\Controllers\SismosController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,4 +66,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('cache.public:86400')
             ->name('proximo');
     });
+
+    // Módulo 6: RUC (límite 20/min según docs/07)
+    Route::get('ruc/{ruc}', [RucController::class, 'show'])
+        ->middleware('throttle:ruc')
+        ->name('ruc.show');
 });

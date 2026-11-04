@@ -81,6 +81,7 @@ class AppServiceProvider extends ServiceProvider
                 \App\Modules\Sismos\Commands\PurgeSismosCommand::class,
                 \App\Modules\Feriados\Commands\AddFeriadoCommand::class,
                 \App\Modules\Feriados\Commands\SyncFeriadosCommand::class,
+                \App\Modules\Ruc\Commands\PurgeConsultasLogCommand::class,
             ]);
         }
     }
@@ -97,6 +98,11 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('calculadoras', function (Request $request) {
             return Limit::perMinute((int) config('api.rate_limits.calculadoras', 30))
+                ->by($request->ip());
+        });
+
+        RateLimiter::for('ruc', function (Request $request) {
+            return Limit::perMinute((int) config('api.rate_limits.ruc', 20))
                 ->by($request->ip());
         });
     }

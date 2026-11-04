@@ -8,7 +8,6 @@ use App\Modules\Dolar\Models\CotizacionMoneda;
 use App\Support\Exceptions\SourceUnavailableException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class DolarService
@@ -276,13 +275,10 @@ class DolarService
 
     private function recordSourceHealthError(string $errorMessage): void
     {
-        FuenteEstado::query()->updateOrCreate(
-            ['modulo' => 'dolar'],
-            [
-                'ultimo_error' => now('America/Lima'),
-                'mensaje_error' => $errorMessage,
-                'intentos_fallidos' => DB::raw('intentos_fallidos + 1'),
-            ]
-        );
+        $estado = FuenteEstado::query()->firstOrNew(['modulo' => 'dolar']);
+        $estado->ultimo_error = now('America/Lima');
+        $estado->mensaje_error = $errorMessage;
+        $estado->intentos_fallidos = ($estado->intentos_fallidos ?? 0) + 1;
+        $estado->save();
     }
 }

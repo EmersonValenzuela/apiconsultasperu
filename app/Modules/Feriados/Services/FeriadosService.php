@@ -6,7 +6,6 @@ use App\Models\FuenteEstado;
 use App\Modules\Feriados\Contracts\HolidayProvider;
 use App\Modules\Feriados\Models\Feriado;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class FeriadosService
@@ -196,13 +195,10 @@ class FeriadosService
 
     private function recordSourceHealthError(string $errorMessage): void
     {
-        FuenteEstado::query()->updateOrCreate(
-            ['modulo' => 'feriados'],
-            [
-                'ultimo_error' => now('America/Lima'),
-                'mensaje_error' => $errorMessage,
-                'intentos_fallidos' => DB::raw('intentos_fallidos + 1'),
-            ]
-        );
+        $estado = FuenteEstado::query()->firstOrNew(['modulo' => 'feriados']);
+        $estado->ultimo_error = now('America/Lima');
+        $estado->mensaje_error = $errorMessage;
+        $estado->intentos_fallidos = ($estado->intentos_fallidos ?? 0) + 1;
+        $estado->save();
     }
 }

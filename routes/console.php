@@ -22,3 +22,6 @@ Schedule::command('sismos:purgar')->weekly()->name('purge-old-sismos');
 
 // Scheduler: Módulo Feriados (sincronización diaria docs/02)
 Schedule::job(new SyncFeriadosJob())->daily()->name('sync-feriados')->withoutOverlapping();
+
+// Scheduler: Módulo RUC - Purga semanal de consultas_log mayores a 90 días (docs/04)
+Schedule::command('consultas:purgar')->weekly()->name('purge-old-consultas-log');

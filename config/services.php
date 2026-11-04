@@ -69,4 +69,15 @@ return [
         ],
     ],
 
+    'ruc' => [
+        'drivers' => env('RUC_DRIVERS', 'peru_consult,padron_sunat'),
+        'peru_consult' => [
+            'base_url' => env('PERU_CONSULT_URL', 'http://peru-consult-api:8080'),
+            'token' => env('PERU_CONSULT_TOKEN', null),
+            'timeout' => (int) env('PERU_CONSULT_TIMEOUT', 5),
+            'retry_times' => (int) env('PERU_CONSULT_RETRY_TIMES', 2),
+            'retry_sleep' => (int) env('PERU_CONSULT_RETRY_SLEEP', 200),
+        ],
+    ],
+
 ];
