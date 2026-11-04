@@ -76,5 +76,10 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute((int) config('api.rate_limits.general'))
                 ->by($request->ip());
         });
+
+        RateLimiter::for('calculadoras', function (Request $request) {
+            return Limit::perMinute((int) config('api.rate_limits.calculadoras', 30))
+                ->by($request->ip());
+        });
     }
 }

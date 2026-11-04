@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\HealthController;
+use App\Modules\Calculadoras\Http\Controllers\CalculadorasController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
 use App\Modules\Sismos\Http\Controllers\SismosController;
@@ -44,5 +45,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->whereNumber('id')
             ->middleware('cache.public:300')
             ->name('show');
+    });
+
+    // Módulo 3: Calculadoras (límite 30/min según docs/07)
+    Route::prefix('calculadoras')->name('calculadoras.')->middleware('throttle:calculadoras')->group(function () {
+        Route::post('igv', [CalculadorasController::class, 'igv'])->name('igv');
+        Route::post('gratificacion', [CalculadorasController::class, 'gratificacion'])->name('gratificacion');
+        Route::post('cts', [CalculadorasController::class, 'cts'])->name('cts');
     });
 });
