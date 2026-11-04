@@ -2,6 +2,7 @@
 
 use App\Support\Exceptions\ApiExceptionRenderer;
 use App\Support\Http\Middleware\ForceJson;
+use App\Support\Http\Middleware\SecurityHeaders;
 use App\Support\Http\Middleware\SetPublicCacheHeaders;
 use App\Support\Http\Middleware\ValidateAppKey;
 use Illuminate\Foundation\Application;
@@ -18,10 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         // Toda petición a /api/* se trata como JSON y valida la cabecera opcional X-App-Key.
-        $middleware->api(prepend: [
-            ForceJson::class,
-            ValidateAppKey::class,
-        ]);
+        $middleware->api(
+            prepend: [
+                ForceJson::class,
+                ValidateAppKey::class,
+            ],
+            append: [
+                SecurityHeaders::class,
+            ]
+        );
 
         // Límite general por IP (limitador "api", definido en AppServiceProvider).
         $middleware->throttleApi();

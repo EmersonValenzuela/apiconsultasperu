@@ -35,6 +35,7 @@ Por eso: toda la lógica de negocio vive aquí, y la API debe ser estable, versi
 | `docs/06-calculadoras.md` | Fórmulas laborales y tributarias |
 | `docs/07-seguridad-y-legal.md` | Seguridad, privacidad, DNI/RUC |
 | `docs/08-plan-por-fases.md` | Plan de trabajo y prompts por fase |
+| `docs/09-despliegue-coolify.md` | Despliegue en producción con Coolify, Docker, Postgres y Redis |
 
 ## 2.1 Stack
 

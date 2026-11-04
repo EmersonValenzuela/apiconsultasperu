@@ -25,7 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['ETag', 'Retry-After'],
 
     'max_age' => 0,
 
