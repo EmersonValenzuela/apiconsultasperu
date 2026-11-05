@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Guía paso a paso para instalar Coolify en AWS y desplegar Consulta Hoy Perú con frontend, API, PostgreSQL y Redis separados.">
+  <title>Despliegue de Consulta Hoy Perú en Coolify</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #526078;
+      --line: #dce3ed;
+      --paper: #fff;
+      --canvas: #f3f6fb;
+      --blue: #185adb;
+      --blue-soft: #eaf1ff;
+      --green-soft: #eaf8ef;
+      --green: #176b37;
+      --amber-soft: #fff5dc;
+      --amber: #7a4b00;
+      --red-soft: #fff0ee;
+      --red: #9c2c1e;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    a { color: var(--blue); }
+
+    .page {
+      width: min(100% - 32px, 1040px);
+      margin: 32px auto 64px;
+    }
+
+    header, main, footer {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 28px rgb(23 32 51 / 5%);
+    }
+
+    header { padding: clamp(24px, 5vw, 52px); }
+    main { margin-top: 20px; padding: clamp(20px, 4vw, 42px); }
+    footer { margin-top: 20px; padding: 20px 24px; color: var(--muted); font-size: .92rem; }
+
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { max-width: 760px; margin: 0 0 14px; font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -.04em; }
+    h2 { margin: 48px 0 14px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 1.7rem; }
+    h3 { margin: 28px 0 8px; font-size: 1.18rem; }
+    p { margin: 10px 0 16px; }
+    li { margin: 6px 0; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    code { overflow-wrap: anywhere; }
+    pre {
+      overflow-x: auto;
+      margin: 14px 0 20px;
+      padding: 18px;
+      border: 1px solid #26334c;
+      border-radius: 10px;
+      background: #111a2b;
+      color: #eef4ff;
+      font-size: .9rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .intro { max-width: 760px; color: var(--muted); font-size: 1.12rem; }
+    .badge {
+      display: inline-block;
+      margin: 4px 6px 0 0;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: #1948a0;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .callout {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: var(--blue-soft);
+    }
+
+    .callout.good { border-color: var(--green); background: var(--green-soft); }
+    .callout.warn { border-color: #bf7a00; background: var(--amber-soft); }
+    .callout.danger { border-color: var(--red); background: var(--red-soft); }
+    .callout p:last-child { margin-bottom: 0; }
+
+    nav {
+      margin-top: 28px;
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfcff;
+    }
+
+    nav h2 { margin: 0 0 10px; padding: 0; border: 0; font-size: 1.1rem; }
+    nav ol { columns: 2; column-gap: 36px; margin: 0; padding-left: 22px; }
+    nav li { break-inside: avoid; }
+
+    table {
+      width: 100%;
+      margin: 16px 0 22px;
+      border-collapse: collapse;
+      font-size: .94rem;
+    }
+
+    th, td { padding: 11px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #f6f8fc; }
+
+    .checklist { padding-left: 0; list-style: none; }
+    .checklist li { position: relative; padding-left: 30px; }
+    .checklist li::before {
+      position: absolute;
+      left: 0;
+      content: "□";
+      color: var(--blue);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 22px 0;
+    }
+
+    .flow div {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcff;
+      text-align: center;
+      font-weight: 750;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: .9rem; }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 18px, 1040px); margin-top: 10px; }
+      nav ol { columns: 1; }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      table { display: block; overflow-x: auto; }
+    }
+
+    @media print {
+      :root { --canvas: #fff; }
+      body { background: #fff; font-size: 10pt; }
+      .page { width: 100%; margin: 0; }
+      header, main, footer { box-shadow: none; border-color: #bbb; }
+      h2 { break-after: avoid; }
+      pre, table, .callout { break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">Consulta Hoy Perú · Infraestructura</p>
+      <h1>Desplegar desde cero en Coolify</h1>
+      <p class="intro">Guía para instalar Coolify en un VPS nuevo de AWS y publicar el frontend Astro, la API Laravel, PostgreSQL y Redis como recursos independientes.</p>
+      <span class="badge">AWS EC2</span>
+      <span class="badge">Coolify self-hosted</span>
+      <span class="badge">PostgreSQL 16</span>
+      <span class="badge">Redis</span>
+      <span class="badge">Dockerfile</span>
+
+      <div class="callout warn">
+        <strong>Antes de empezar:</strong> este procedimiento crea una instalación nueva. Si hay información que se deba conservar, realiza y descarga copias de seguridad antes de borrar el VPS o los volúmenes. Eliminar un VPS destruye sus datos locales.
+      </div>
+
+      <div class="callout">
+        <strong>Arquitectura de esta guía:</strong> los cuatro recursos se crean en el mismo servidor y destino de Docker en Coolify para que la API pueda usar las URLs privadas de PostgreSQL y Redis. No se publica ningún puerto de base de datos a Internet.
+      </div>
+
+      <div class="flow" aria-label="Flujo de recursos">
+        <div>PostgreSQL<br><span class="muted small">privado</span></div>
+        <div>Redis<br><span class="muted small">privado</span></div>
+        <div>API Laravel<br><span class="muted small">api.tudominio</span></div>
+        <div>Frontend Astro<br><span class="muted small">tudominio</span></div>
+      </div>
+
+      <nav aria-label="Contenido">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#preparacion">Preparar AWS y el dominio</a></li>
+          <li><a href="#instalar">Instalar Coolify</a></li>
+          <li><a href="#proyecto">Crear proyecto y ambiente</a></li>
+          <li><a href="#postgres">Crear PostgreSQL</a></li>
+          <li><a href="#redis">Crear Redis</a></li>
+          <li><a href="#backend">Desplegar el backend</a></li>
+          <li><a href="#frontend">Desplegar el frontend</a></li>
+          <li><a href="#validar">Validar la instalación</a></li>
+          <li><a href="#operacion">Respaldos y operación</a></li>
+          <li><a href="#problemas">Solución de problemas</a></li>
+        </ol>
+      </nav>
+    </header>
+
+    <main>
+      <section id="preparacion">
+        <h2>1. Preparar AWS y el dominio</h2>
+
+        <h3>Crear el VPS</h3>
+        <ol>
+          <li>Crea una instancia Linux nueva. Coolify lista Ubuntu y Debian como sistemas soportados; Ubuntu LTS (por ejemplo, 24.04 LTS) es una opción práctica.</li>
+          <li>Asigna una IP pública estática/Elastic IP si el proveedor lo permite, para que el DNS no cambie si la instancia se reinicia o reemplaza.</li>
+          <li>Coolify publica como mínimo oficial <strong>2 núcleos de CPU, 2 GB de RAM y 10 GB de disco libres</strong>. Eso es el mínimo de Coolify, no una garantía de recursos suficientes para compilar y operar frontend, backend y bases de datos juntos.</li>
+          <li>Para este proyecto, se recomienda más memoria y CPU sostenida que el mínimo, con espacio para imágenes Docker, datos y respaldos. En instancias AWS burstable, los builds de Docker pueden agotar créditos; evita compilar frontend y backend simultáneamente o considera una instancia/build server con CPU sostenida.</li>
+          <li>Conserva el acceso SSH y una copia de la clave privada. No cierres la consola del proveedor hasta validar que Coolify puede acceder al servidor.</li>
+        </ol>
+
+        <h3>Configurar el Security Group de AWS</h3>
+        <p>Configura reglas de entrada TCP. No abras puertos de bases de datos (5432/6379) a Internet.</p>
+        <table>
+          <thead><tr><th>Puerto</th><th>Origen</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td>22</td><td>Tu IP pública / CIDR mínimo necesario</td><td>SSH. No lo dejes abierto a todo Internet si puedes restringirlo.</td></tr>
+            <tr><td>80 y 443</td><td>Internet</td><td>Proxy de Coolify, tráfico web y certificados HTTPS.</td></tr>
+            <tr><td>8000, 6001, 6002</td><td>Tu IP, temporalmente</td><td>Panel, actualizaciones en tiempo real y terminal de Coolify al usar acceso directo por IP.</td></tr>
+          </tbody>
+        </table>
+        <p>Después de configurar un dominio HTTPS para el propio panel de Coolify y confirmar que funciona, puedes cerrar 8000/6001/6002 públicamente y acceder al panel mediante el dominio. Mantén SSH abierto.</p>
+
+        <h3>Preparar DNS</h3>
+        <p>Crea registros <code>A</code> que apunten a la IP pública del VPS:</p>
+        <table>
+          <thead><tr><th>Nombre de ejemplo</th><th>Destino</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td><code>consultasperu.safezoneperu.com</code></td><td>IP pública del VPS</td><td>Frontend, si mantienes el dominio actual del Dockerfile Astro.</td></tr>
+            <tr><td><code>api-consultas.safezoneperu.com</code></td><td>IP pública del VPS</td><td>API, como está definido actualmente en la guía del backend.</td></tr>
+          </tbody>
+        </table>
+        <p>Reemplaza esos nombres por tus dominios definitivos si van a cambiar. El frontend construye la URL de la API dentro del sitio estático, por lo que un cambio de dominio de API requiere actualizar el argumento <code>PUBLIC_API_URL</code> y volver a compilar/desplegar el frontend.</p>
+      </section>
+
+      <section id="instalar">
+        <h2>2. Instalar Coolify</h2>
+        <ol>
+          <li>Conéctate por SSH al VPS como <code>root</code> o con un usuario que pueda usar <code>sudo</code>.</li>
+          <li>Confirma que el Security Group permite SSH desde tu IP y que no tienes otros servicios ocupando 80/443.</li>
+          <li>Ejecuta el instalador oficial de Coolify:</li>
+        </ol>
+        <pre><code>curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre>
+        <ol start="4">
+          <li>Espera a que termine y sigue la URL indicada al final. Para acceso directo inicial normalmente es <code>http://IP_PUBLICA:8000</code>.</li>
+          <li><strong>Crea inmediatamente la cuenta administradora.</strong> No dejes el registro abierto: quien acceda primero puede apropiarse del panel.</li>
+          <li>En Coolify, verifica que el servidor <strong>localhost</strong> esté conectado y que el proxy esté activo. Si aparece detenido, inicia el proxy antes de desplegar dominios.</li>
+          <li>Guarda fuera del VPS una copia segura del archivo <code>/data/coolify/source/.env</code>. Incluye secretos necesarios para recuperar la instalación de Coolify.</li>
+        </ol>
+        <div class="callout danger">
+          <strong>Seguridad:</strong> el comando ejecuta el instalador oficial con privilegios de administrador. Revisa la guía vigente de Coolify antes de ejecutarlo y no compartas credenciales, claves privadas ni URLs de conexión con contraseñas.
+        </div>
+      </section>
+
+      <section id="proyecto">
+        <h2>3. Crear el proyecto y ambiente</h2>
+        <ol>
+          <li>En el panel, crea un proyecto llamado <strong>Consulta Hoy Perú</strong>.</li>
+          <li>Crea o selecciona el ambiente <strong>production</strong>.</li>
+          <li>Usa el mismo servidor localhost y el mismo destino/red de Docker para PostgreSQL, Redis y la aplicación. La URL interna generada por Coolify solo sirve desde recursos con acceso a esa red/destino.</li>
+          <li>Conecta GitHub a Coolify desde Sources si aún no has autorizado los repositorios.</li>
+        </ol>
+        <div class="callout good">
+          Orden recomendado de despliegue: <strong>PostgreSQL → Redis → Backend → Frontend</strong>. Así las dependencias estarán listas cuando Laravel arranque y ejecute migraciones.
+        </div>
+      </section>
+
+      <section id="postgres">
+        <h2>4. Crear PostgreSQL independiente</h2>
+        <ol>
+          <li>Abre el proyecto y ambiente, elige <strong>New Resource → Databases → PostgreSQL</strong>.</li>
+          <li>Selecciona el mismo servidor y destino donde vivirá la aplicación.</li>
+          <li>Elige la imagen/versión <strong>PostgreSQL 16</strong> para coincidir con la documentación del backend.</li>
+          <li>Configura el nombre inicial de base de datos, por ejemplo <code>consultahoy</code>, o conserva los valores generados por Coolify.</li>
+          <li>Guarda el usuario y contraseña generados como secretos. No reutilices contraseñas de ejemplo ni las pongas en el repositorio.</li>
+          <li>Deja PostgreSQL privado: no habilites acceso público ni mapees 5432 al host. Espera a que aparezca como activo/healthy.</li>
+          <li>Copia la <strong>Postgres URL (internal)</strong> de la pantalla de conexión del recurso. La usarás como <code>DB_URL</code> en Laravel.</li>
+          <li>Configura respaldos programados desde Coolify y revisa que se guarden fuera del VPS, idealmente en almacenamiento externo.</li>
+        </ol>
+        <div class="callout warn">
+          Los valores de usuario, contraseña y base inicial se aplican cuando PostgreSQL inicializa un volumen vacío. Cambiar las variables más adelante no modifica las credenciales de una base ya inicializada. No borres el volumen para solucionar un fallo de autenticación.
+        </div>
+      </section>
+
+      <section id="redis">
+        <h2>5. Crear Redis independiente</h2>
+        <ol>
+          <li>Elige <strong>New Resource → Databases → Redis</strong>.</li>
+          <li>Selecciona el mismo servidor y destino/red de Docker.</li>
+          <li>Conserva autenticación y almacenamiento persistente. Espera a que el recurso esté activo/healthy.</li>
+          <li>Copia la <strong>Redis URL (internal)</strong> para usarla como <code>REDIS_URL</code> en Laravel.</li>
+          <li>Mantén Redis privado; no publiques el puerto 6379 a Internet.</li>
+        </ol>
+        <p>El backend usa el driver PHP <code>phpredis</code>, incluido en la imagen. Usar la URL interna completa permite conservar el host, puerto y contraseña generados por Coolify sin copiar manualmente datos sensibles a varios campos.</p>
+      </section>
+
+      <section id="backend">
+        <h2>6. Desplegar el backend Laravel</h2>
+
+        <h3>Crear la aplicación</h3>
+        <ol>
+          <li>En el proyecto, selecciona <strong>New Resource → Application → GitHub</strong> y el repositorio <code>EmersonValenzuela/apiconsultasperu</code>.</li>
+          <li>Selecciona la rama <code>main</code>.</li>
+          <li>Selecciona el método de build <strong>Dockerfile</strong>. El Dockerfile está en la raíz del repositorio; deja la ruta como <code>/Dockerfile</code> (o el valor predeterminado equivalente) y el directorio raíz como la raíz del repositorio.</li>
+          <li>En los puertos expuestos, indica <code>80</code>. No es necesario publicar un puerto del contenedor directamente en el host: el proxy de Coolify enruta el dominio al puerto interno.</li>
+          <li>En Domains, asigna <code>https://api-consultas.safezoneperu.com</code> o el dominio que configuraste para la API.</li>
+        </ol>
+
+        <h3>Configurar variables de producción</h3>
+        <p>Agrega las siguientes variables en la configuración de la aplicación. Marca los valores sensibles como secretos cuando Coolify lo permita.</p>
+        <pre><code>APP_NAME="Consulta Hoy Peru"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:REEMPLAZAR_POR_UNA_CLAVE_GENERADA
+APP_URL=https://api-consultas.safezoneperu.com
+LOG_LEVEL=warning
+
+DB_CONNECTION=pgsql
+DB_URL=postgres://USUARIO:CLAVE@HOST_INTERNO:5432/consultahoy
+
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+REDIS_CLIENT=phpredis
+REDIS_URL=redis://:CLAVE@HOST_INTERNO:6379/0
+
+CORS_ALLOWED_ORIGINS=https://consultasperu.safezoneperu.com
+RATE_LIMIT_GENERAL=60
+RATE_LIMIT_CALCULADORAS=30
+RATE_LIMIT_RUC=20
+RATE_LIMIT_DNI=5
+DNI_ENABLED=false</code></pre>
+        <ul>
+          <li>Reemplaza <code>APP_KEY</code> con una clave recién generada. Desde una copia local del repositorio, ejecuta <code>php artisan key:generate --show</code> y copia el resultado completo. Nunca guardes esa clave en Git.</li>
+          <li>Reemplaza <code>DB_URL</code> y <code>REDIS_URL</code> por las URLs internas exactas que muestran los recursos de Coolify. No uses las URLs públicas.</li>
+          <li>Si la URL de PostgreSQL usa otro nombre de base de datos distinto de <code>consultahoy</code>, no la cambies aquí: conserva la base configurada en el recurso.</li>
+          <li><code>CORS_ALLOWED_ORIGINS</code> debe coincidir exactamente con el origen público del frontend, incluyendo <code>https://</code> y sin una barra final. Si cambia el dominio, actualiza este valor.</li>
+          <li>Si configuras DNI en el futuro, revisa primero las restricciones de privacidad y protección anti-bots documentadas; por defecto debe seguir desactivado.</li>
+          <li>Configura también las variables de proveedores externos que realmente uses (por ejemplo, los drivers y credenciales de RUC). No inventes tokens: cada valor secreto debe venir del proveedor correspondiente.</li>
+        </ul>
+
+        <h3>Desplegar y revisar migraciones</h3>
+        <ol>
+          <li>Guarda la configuración y selecciona <strong>Deploy</strong>.</li>
+          <li>El contenedor del rol <code>app</code> ejecuta al iniciar <code>php artisan migrate --force</code>, siembras base y luego inicia Nginx/PHP-FPM.</li>
+          <li>Revisa los logs de despliegue. Si una migración falla, el arranque debe considerarse fallido: corrige la causa y vuelve a desplegar antes de publicar el frontend.</li>
+          <li>La imagen instala PHP 8.3, Nginx y extensiones mediante paquetes binarios. No compila extensiones PHP con <code>docker-php-ext-install</code> ni PECL. Aun así, el tiempo de build depende de las descargas, Composer, red y caché del builder; no hay una duración garantizada.</li>
+        </ol>
+        <div class="callout">
+          En la configuración actual del backend, el rol <code>app</code> inicia Nginx/PHP-FPM y también los procesos scheduler/worker mediante Supervisor. <strong>No crees todavía aplicaciones duplicadas worker y scheduler</strong>: ejecutarían los mismos procesos más de una vez. Si se separan en recursos en el futuro, primero hay que ajustar y probar este modo de arranque.
+        </div>
+      </section>
+
+      <section id="frontend">
+        <h2>7. Desplegar el frontend Astro</h2>
+        <ol>
+          <li>En el mismo proyecto y ambiente, crea otra aplicación desde GitHub: <code>EmersonValenzuela/consultashoyperu</code>, rama <code>main</code>.</li>
+          <li>Selecciona build por <strong>Dockerfile</strong>. El archivo está en la raíz del repositorio. Usa el puerto expuesto <code>80</code>.</li>
+          <li>Asigna el dominio público del frontend, por ejemplo <code>https://consultasperu.safezoneperu.com</code>.</li>
+          <li>Configura los siguientes <strong>build arguments</strong> (también llamados argumentos de build o variables disponibles durante la compilación, según la pantalla de Coolify):</li>
+        </ol>
+        <pre><code>SITE_URL=https://consultasperu.safezoneperu.com
+PUBLIC_API_URL=https://api-consultas.safezoneperu.com/api/v1</code></pre>
+        <p>El Dockerfile del frontend usa esos valores al compilar Astro y luego sirve <code>dist/</code> con Nginx. Si solo los agregas como variables disponibles en tiempo de ejecución, es posible que no cambien el sitio estático: confirma que Coolify los pase como <strong>build arguments</strong> y vuelve a desplegar después de modificarlos.</p>
+        <p>Usa como <code>PUBLIC_API_URL</code> el origen HTTPS público de la API más el prefijo <code>/api/v1</code>. La URL interna de PostgreSQL/Redis nunca debe incluirse en el frontend.</p>
+      </section>
+
+      <section id="validar">
+        <h2>8. Validar frontend, API y conexiones</h2>
+        <ol>
+          <li>Confirma que PostgreSQL y Redis aparecen healthy en Coolify antes de probar la API.</li>
+          <li>Abre el dominio HTTPS de la API y consulta el health endpoint:</li>
+        </ol>
+        <pre><code>curl -i https://api-consultas.safezoneperu.com/api/v1/health</code></pre>
+        <p>Verifica HTTP 200 y una respuesta JSON con estado saludable. Si responde 503 o la conexión falla, revisa los logs del backend y el health de las bases de datos.</p>
+        <ol start="3">
+          <li>Abre el frontend por HTTPS y verifica que carguen las páginas y los assets.</li>
+          <li>Prueba una pantalla que consuma la API y revisa Network/Console en el navegador. Confirma que las solicitudes vayan a <code>https://api-consultas.safezoneperu.com/api/v1/...</code>, no a localhost ni a una dirección privada.</li>
+          <li>Revisa fallos de CORS: el origen del frontend debe estar incluido en <code>CORS_ALLOWED_ORIGINS</code> del backend. Después de cambiar variables de entorno, redepliega el recurso correspondiente.</li>
+          <li>Confirma en el navegador que el certificado HTTPS es válido para ambos dominios.</li>
+        </ol>
+        <ul class="checklist">
+          <li>DNS de frontend y API apunta a la IP correcta.</li>
+          <li>Puertos 80/443 alcanzan el proxy de Coolify.</li>
+          <li>PostgreSQL y Redis son privados y están healthy.</li>
+          <li>Las migraciones terminaron correctamente.</li>
+          <li>El health endpoint y una ruta del frontend responden por HTTPS.</li>
+          <li>El frontend consume la URL pública correcta de la API.</li>
+        </ul>
+      </section>
+
+      <section id="operacion">
+        <h2>9. Respaldos y operación segura</h2>
+        <ul>
+          <li>Configura respaldos programados de PostgreSQL y guarda copias fuera del mismo VPS. Prueba la restauración antes de depender de ella.</li>
+          <li>Guarda de forma segura <code>APP_KEY</code>, credenciales de PostgreSQL/Redis y los secretos de instalación de Coolify. No los incluyas en Git, tickets públicos ni capturas.</li>
+          <li>Actualiza frontend/backend con despliegues nuevos y revisa sus logs. Mantén forma de volver a la versión anterior si un release falla.</li>
+          <li>Monitorea CPU, créditos burstable, RAM y espacio en disco. Los builds Astro/Composer pueden consumir CPU y espacio temporal para imágenes.</li>
+          <li>No elimines volúmenes de PostgreSQL/Redis al borrar o recrear aplicaciones. La vida del recurso/base de datos debe administrarse separada de la app.</li>
+          <li>Mantén <code>APP_DEBUG=false</code> en producción y restringe el acceso administrativo al panel Coolify.</li>
+        </ul>
+      </section>
+
+      <section id="problemas">
+        <h2>10. Solución de problemas frecuentes</h2>
+
+        <h3>PostgreSQL: password authentication failed</h3>
+        <p>Comprueba que <code>DB_URL</code> sea la URL interna exacta del recurso, el usuario y base existan y la contraseña corresponda al volumen ya inicializado. Cambiar la contraseña en Coolify no reescribe automáticamente credenciales de un directorio de datos existente. No borres el volumen para “probar”.</p>
+
+        <h3>Connection refused / host no resuelto</h3>
+        <p>Confirma que la aplicación, PostgreSQL y Redis estén en el mismo servidor/destino y red de Coolify, que las bases estén healthy y que la aplicación use las URLs internas. No reemplaces el host interno por <code>localhost</code>, la IP pública ni el nombre de otro recurso.</p>
+
+        <h3>Frontend muestra errores CORS</h3>
+        <p>Revisa <code>CORS_ALLOWED_ORIGINS</code> del backend, incluyendo protocolo HTTPS, dominio y ausencia de barra final. Cambia la variable y redepliega el backend.</p>
+
+        <h3>Frontend llama a la API equivocada</h3>
+        <p>Verifica <code>PUBLIC_API_URL</code> como build argument en el recurso frontend y vuelve a compilar/desplegar. Astro genera un sitio estático: no basta con cambiar una variable de runtime después de compilar.</p>
+
+        <h3>El build tarda mucho o se agota</h3>
+        <p>Revisa CPU, créditos, RAM y disco de la instancia. Despliega un recurso a la vez; el frontend compila con Node y el backend instala Composer/dependencias del sistema. Eliminar compilaciones de extensiones PHP reduce carga, pero no garantiza builds completos de menos de un minuto.</p>
+
+        <h3>HTTPS no se emite</h3>
+        <p>Confirma que DNS resuelva a este VPS, los puertos 80/443 estén abiertos y el dominio esté configurado en la aplicación antes de redeplegarla. Un DNS recién modificado puede tardar en propagarse.</p>
+      </section>
+
+      <section id="referencias">
+        <h2>Referencias oficiales</h2>
+        <ul>
+          <li><a href="https://coolify.io/docs/start-with-self-hosted">Instalar Coolify self-hosted</a></li>
+          <li><a href="https://coolify.io/docs/core/infrastructure/servers/firewall">Puertos y firewall requeridos</a></li>
+          <li><a href="https://coolify.io/docs/applications/">Aplicaciones y métodos de despliegue</a></li>
+          <li><a href="https://coolify.io/docs/core/networking/domains">Dominios y HTTPS</a></li>
+          <li><a href="https://coolify.io/docs/databases/postgresql">Crear y conectar PostgreSQL</a></li>
+          <li><a href="https://coolify.io/docs/databases/redis">Crear y conectar Redis</a></li>
+          <li><a href="./09-despliegue-coolify.md">Especificación técnica de despliegue del backend</a></li>
+        </ul>
+        <p class="muted small">Los nombres de botones y algunas pantallas de Coolify pueden cambiar entre versiones. Sigue la documentación oficial vigente si la interfaz instalada difiere de esta guía.</p>
+      </section>
+    </main>
+
+    <footer>
+      <strong>Consulta Hoy Perú</strong> · Guía de despliegue para esta arquitectura de repositorios separados. Revisa y reemplaza dominios de ejemplo antes de desplegar.
+    </footer>
+  </div>
+</body>
+</html>

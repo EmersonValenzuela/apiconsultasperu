@@ -2,12 +2,14 @@
 
 Esta guía describe cómo desplegar el backend de **Consulta Hoy Perú** en producción utilizando [Coolify](https://coolify.io).
 
+Para una guía visual paso a paso que cubre la instalación de Coolify y el despliegue separado del frontend, backend, PostgreSQL y Redis, consulta [Guía de despliegue en Coolify (HTML)](./guia-despliegue-coolify.html).
+
 ---
 
 ## 1. Arquitectura de Despliegue
 
 El despliegue consta de 5 servicios orquestados vía Docker:
-1. **`app`**: API REST Laravel servida por Nginx + PHP 8.3-FPM (Alpine).
+1. **`app`**: API REST Laravel servida por Nginx + PHP 8.3-FPM (Debian Bookworm).
 2. **`worker`**: Proceso de colas background (`php artisan queue:work --tries=3`).
 3. **`scheduler`**: Planificador de tareas (`php artisan schedule:work`).
 4. **`postgres`**: Base de datos relacional PostgreSQL 16.
@@ -38,6 +40,8 @@ DB_DATABASE=consultahoy
 DB_USERNAME=postgres
 DB_PASSWORD=CLAVE_SUPER_SEGURA_AQUI
 ```
+
+En el despliegue Docker Compose, `DB_HOST` y `DB_PORT` pueden cambiarse para usar un servidor PostgreSQL externo; por defecto apuntan al servicio `postgres` de Compose. La contraseña debe configurarse como variable/secret de Coolify y ser no vacía. Compose no usa contraseñas predeterminadas ni autenticación `trust`.
 
 ### Caché, Colas y Sesiones (Redis 7)
 ```ini
@@ -83,6 +87,10 @@ TURNSTILE_SECRET_KEY=TU_CLAVE_SECRETA_CLOUDFLARE_TURNSTILE
 4. Asigna las variables de entorno listadas arriba en la pestaña **Environment Variables**.
 5. Conecta el dominio `api.tudominio.pe` al servicio `app` (puerto 80).
 6. Presiona **Deploy**.
+
+La imagen instala PHP 8.3 y sus extensiones desde paquetes binarios precompilados de Debian/Sury; no ejecuta `docker-php-ext-install` ni PECL durante el build. El build valida que `bcmath`, `intl`, `opcache`, `pcntl`, `pdo_pgsql`, `redis` y `zip` estén cargadas antes de continuar. El tiempo total también depende de la descarga de paquetes y de Composer, especialmente en un build sin caché.
+
+PostgreSQL inicializa `POSTGRES_DB`, `POSTGRES_USER` y `POSTGRES_PASSWORD` solamente cuando su volumen de datos está vacío. Si se conservó el volumen entre despliegues, cambiar estas variables no cambia la contraseña existente: configura en Coolify la contraseña que ya tiene el usuario o actualízala en PostgreSQL antes de cambiar el secreto. No borres el volumen para resolver un error de autenticación, porque contiene los datos de producción.
 
 ### Opción B: Despliegue como Aplicación Individual con Bases Gestionadas
 Si prefieres usar una base de datos PostgreSQL y Redis gestionada externamente por Coolify:

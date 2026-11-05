@@ -12,11 +12,11 @@ services:
       APP_KEY: ${APP_KEY}
       APP_URL: ${APP_URL:-http://localhost:8000}
       DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
       DB_DATABASE: ${DB_DATABASE:-consultahoy}
       DB_USERNAME: ${DB_USERNAME:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-secret}
+      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD antes de desplegar}
       CACHE_STORE: redis
       QUEUE_CONNECTION: redis
       SESSION_DRIVER: redis
@@ -43,8 +43,7 @@ services:
     environment:
       POSTGRES_DB: ${DB_DATABASE:-consultahoy}
       POSTGRES_USER: ${DB_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD antes de desplegar}
     volumes:
       - postgres_data_v3:/var/lib/postgresql/data
     healthcheck:
@@ -68,5 +67,4 @@ services:
 
 volumes:
   postgres_data_v3:
-  redis_data_v2:
   redis_data_v2:
