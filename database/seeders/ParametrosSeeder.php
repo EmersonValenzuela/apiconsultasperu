@@ -20,11 +20,11 @@ class ParametrosSeeder extends Seeder
             ],
             [
                 'clave' => 'rmv',
-                'valor' => '1025.0000',
-                'vigente_desde' => '2022-05-01',
+                'valor' => '1230.0000',
+                'vigente_desde' => '2025-01-01',
                 'vigente_hasta' => null,
-                'fuente_legal' => 'D.S. N° 003-2022-TR',
-                'verificado_en' => '2026-11-04',
+                'fuente_legal' => 'D.S. N° 003-2022-TR / RMV S/ 1,230 (Asignación Familiar S/ 123.00)',
+                'verificado_en' => '2026-11-05',
             ],
             [
                 'clave' => 'asignacion_familiar_pct',

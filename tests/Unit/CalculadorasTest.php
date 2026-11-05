@@ -109,3 +109,14 @@ test('rechaza el cálculo si falta un parámetro requerido en la base de datos',
     expect(fn () => $this->service->calcularIgv(1000, 'base'))
         ->toThrow(RuntimeException::class);
 });
+
+test('Asignación Familiar suma exactamente 123.00 con la RMV vigente de 1230', function () {
+    $rc = $this->service->calcularRemuneracionComputable(
+        sueldo: 2000,
+        asignacionFamiliar: true,
+        promedioVariables: 0
+    );
+
+    // 2000 + (1230 * 0.10) = 2123.00
+    expect((float) (string) $rc)->toBe(2123.0);
+});
