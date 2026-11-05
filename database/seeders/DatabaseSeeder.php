@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             FuentesEstadoSeeder::class,
             ParametrosSeeder::class,
             FeriadosSeeder::class,
+            CombustiblesSeeder::class,
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\HealthController;
 use App\Modules\Calculadoras\Http\Controllers\CalculadorasController;
+use App\Modules\Combustibles\Http\Controllers\CombustiblesController;
 use App\Modules\Dni\Http\Controllers\DniController;
 use App\Modules\Dolar\Http\Controllers\DolarController;
 use App\Modules\Dolar\Http\Controllers\MonedasController;
@@ -66,6 +67,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('proximo', [FeriadosController::class, 'proximo'])
             ->middleware('cache.public:86400')
             ->name('proximo');
+    });
+
+    // Módulo Combustibles
+    Route::prefix('combustibles')->name('combustibles.')->group(function () {
+        Route::get('/', [CombustiblesController::class, 'index'])
+            ->middleware('cache.public:1800')
+            ->name('index');
+
+        Route::post('calcular-tanque', [CombustiblesController::class, 'calcularTanque'])
+            ->middleware('throttle:calculadoras')
+            ->name('calcular-tanque');
     });
 
     // Módulo 6: RUC (límite 20/min según docs/07)
