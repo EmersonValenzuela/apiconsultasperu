@@ -33,17 +33,21 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Configurar directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar configuraciones de Nginx y Supervisord
+# Copiar configuraciones de Nginx, Supervisord y entrypoint
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Copiar código de la aplicación
+# Copiar archivos de dependencias primero para aprovechar la capa de caché de Docker
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
+
+# Copiar código de la aplicación (excluyendo lo indicado en .dockerignore)
 COPY . /var/www/html
 
-# Instalar dependencias de producción de Composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Generar autoloader optimizado de Composer
+RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 
 # Permisos para storage y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
