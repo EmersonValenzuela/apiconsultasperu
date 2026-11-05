@@ -46,7 +46,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres_data_v2:/var/lib/postgresql/data
+      - postgres_data_v3:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_DATABASE:-consultahoy}"]
       interval: 5s
@@ -67,5 +67,6 @@ services:
       retries: 5
 
 volumes:
-  postgres_data_v2:
+  postgres_data_v3:
+  redis_data_v2:
   redis_data_v2:
