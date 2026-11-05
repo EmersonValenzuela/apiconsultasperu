@@ -1,19 +1,12 @@
 # syntax=docker/dockerfile:1
 FROM php:8.3-fpm-alpine
 
-# Instalar dependencias del sistema y extensiones de PHP requeridas
-RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    postgresql-dev \
-    libzip-dev \
-    sqlite-dev \
-    icu-dev \
-    curl \
-    git \
-    $PHPIZE_DEPS \
-    && docker-php-ext-install -j$(nproc) \
-        pdo \
+# Herramienta oficial para instalar extensiones de PHP precompiladas (evita compilar C/C++)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+# Instalar Nginx, Supervisor y extensiones PHP mediante binarios directos
+RUN apk add --no-cache nginx supervisor curl git \
+    && install-php-extensions \
         pdo_pgsql \
         pgsql \
         pdo_sqlite \
@@ -22,10 +15,7 @@ RUN apk add --no-cache \
         zip \
         pcntl \
         intl \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del $PHPIZE_DEPS \
-    && rm -rf /tmp/pear
+        redis
 
 # Copiar Composer binario oficial
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
