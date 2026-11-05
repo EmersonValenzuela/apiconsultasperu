@@ -25,7 +25,7 @@ APP_NAME="Consulta Hoy Peru"
 APP_ENV=production
 APP_KEY=base64:GENERA_CON_PHP_ARTISAN_KEY_GENERATE
 APP_DEBUG=false
-APP_URL=https://api.tudominio.pe
+APP_URL=https://api-consultas.safezoneperu.com
 PORT=80
 ```
 
@@ -50,7 +50,7 @@ REDIS_PORT=6379
 
 ### Seguridad y CORS
 ```ini
-CORS_ALLOWED_ORIGINS="https://tudominio.pe,https://app.tudominio.pe"
+CORS_ALLOWED_ORIGINS="https://consultasperu.safezoneperu.com"
 RATE_LIMIT_GENERAL=60
 RATE_LIMIT_CALCULADORAS=30
 RATE_LIMIT_RUC=20

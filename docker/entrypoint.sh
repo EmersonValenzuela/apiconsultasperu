@@ -9,9 +9,14 @@ if [ "$ROLE" = "app" ]; then
     echo "Ejecutando migraciones automáticas..."
     php artisan migrate --force
 
-    echo "Asegurando parámetros base del sistema..."
+    echo "Asegurando parámetros base y feriados oficiales..."
     php artisan db:seed --class=ParametrosSeeder --force || true
     php artisan db:seed --class=Feriados2026Seeder --force || true
+
+    echo "Sincronizando datos externos iniciales (Dólar, Sismos, Feriados)..."
+    php artisan dolar:sincronizar || true
+    php artisan sismos:sincronizar || true
+    php artisan feriados:sincronizar || true
 
     if [ "$APP_ENV" = "production" ]; then
         echo "Optimizando cachés para producción..."
@@ -19,15 +24,15 @@ if [ "$ROLE" = "app" ]; then
         php artisan route:cache
     fi
 
-    echo "Iniciando servidor web Nginx + PHP-FPM..."
+    echo "Iniciando servicios con Supervisord (Nginx + PHP-FPM + Scheduler + Worker)..."
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 elif [ "$ROLE" = "worker" ]; then
-    echo "Iniciando worker de colas Laravel..."
+    echo "Iniciando worker dedicado de colas Laravel..."
     exec php artisan queue:work --verbose --tries=3 --timeout=90
 
 elif [ "$ROLE" = "scheduler" ]; then
-    echo "Iniciando planificador de tareas (Scheduler)..."
+    echo "Iniciando planificador dedicado de tareas (Scheduler)..."
     exec php artisan schedule:work
 
 else
