@@ -98,8 +98,9 @@ class DniService
             ]);
         }
 
-        // 4. Caché efímera en memoria/store configurado con clave hash (nunca en BD, máx 1 hora)
-        $dniHash = hash('sha256', $dni);
+        // 4. Caché efímera en memoria/store configurado con clave HMAC (nunca en BD, máx 1 hora)
+        $key = (string) config('app.key', 'ConsultaHoySecretKey');
+        $dniHash = hash_hmac('sha256', $dni, $key);
         $cacheKey = "dni:hash:{$dniHash}";
 
         $cached = Cache::get($cacheKey);

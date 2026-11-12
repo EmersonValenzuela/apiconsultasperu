@@ -28,6 +28,7 @@ class CombustiblesController extends Controller
         $ultimaVigencia = ! empty($precios)
             ? ($precios[0]['vigencia_desde'] ?? Carbon::now('America/Lima')->toDateString())
             : Carbon::now('America/Lima')->toDateString();
+        $regionEfectiva = $precios[0]['region'] ?? ($region ?: 'Lima y Callao');
 
         return ApiResponse::success(
             $precios,
@@ -35,7 +36,7 @@ class CombustiblesController extends Controller
                 'actualizado_en' => Carbon::now('America/Lima')->toIso8601String(),
                 'fuente' => 'Osinergmin / Facilito / Petroperú',
                 'vigencia' => $ultimaVigencia,
-                'region' => $region ?: 'Lima y Callao',
+                'region' => $regionEfectiva,
                 'aviso' => 'Precios promedio y rangos referenciales de estaciones de servicio registradas.',
             ]
         );

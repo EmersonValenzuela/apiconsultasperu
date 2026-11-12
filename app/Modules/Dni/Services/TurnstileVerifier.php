@@ -26,9 +26,8 @@ class TurnstileVerifier
 
         // Si no hay clave secreta configurada (ej. en desarrollo local inicial)
         if (empty($secret)) {
-            // Permitir en local/testing con token de pruebas de Cloudflare:
-            // "1x0000000000000000000000000000000AA" es el dummy token de Cloudflare para pase siempre exitoso
-            return $token === '1x0000000000000000000000000000000AA' || app()->environment('local', 'testing');
+            // Solo permitir en entornos local/testing; en producción falla cerrado
+            return app()->environment('local', 'testing');
         }
 
         try {

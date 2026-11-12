@@ -138,26 +138,28 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('ruc', function (Request $request) {
             /** @var \App\Models\ClienteApi|null $client */
             $client = $request->attributes->get('cliente_api');
+            $maxRuc = (int) config('api.rate_limits.ruc', 20);
 
             if ($client !== null) {
-                return Limit::perMinute($client->limite_por_minuto)
+                return Limit::perMinute(min($client->limite_por_minuto, $maxRuc))
                     ->by('cliente_api:'.$client->id);
             }
 
-            return Limit::perMinute((int) config('api.rate_limits.ruc', 20))
+            return Limit::perMinute($maxRuc)
                 ->by($request->ip());
         });
 
         RateLimiter::for('dni', function (Request $request) {
             /** @var \App\Models\ClienteApi|null $client */
             $client = $request->attributes->get('cliente_api');
+            $maxDni = (int) config('api.rate_limits.dni', 5);
 
             if ($client !== null) {
-                return Limit::perMinute($client->limite_por_minuto)
+                return Limit::perMinute(min($client->limite_por_minuto, $maxDni))
                     ->by('cliente_api:'.$client->id);
             }
 
-            return Limit::perMinute((int) config('api.rate_limits.dni', 5))
+            return Limit::perMinute($maxDni)
                 ->by($request->ip());
         });
     }

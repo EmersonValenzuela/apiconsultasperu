@@ -3,8 +3,8 @@
 namespace App\Modules\Combustibles\Services;
 
 use App\Modules\Combustibles\Models\PrecioCombustible;
+use App\Support\Exceptions\SourceUnavailableException;
 use Illuminate\Support\Facades\Cache;
-use InvalidArgumentException;
 
 class CombustibleService
 {
@@ -46,7 +46,11 @@ class CombustibleService
         $combustible = PrecioCombustible::where('tipo', $tipo)->first();
 
         if (! $combustible) {
-            throw new InvalidArgumentException("El tipo de combustible '{$tipo}' no es válido.");
+            throw new SourceUnavailableException("No hay precios registrados para el tipo de combustible '{$tipo}'.");
+        }
+
+        if ($combustible->precio_promedio <= 0 || $combustible->precio_minimo <= 0 || $combustible->precio_maximo <= 0) {
+            throw new SourceUnavailableException("Los precios registrados para '{$tipo}' no son válidos.");
         }
 
         if ($tipoCalculo === 'llenar_tanque') {

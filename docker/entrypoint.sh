@@ -9,9 +9,11 @@ if [ "$ROLE" = "app" ]; then
     echo "Ejecutando migraciones automáticas..."
     php artisan migrate --force
 
-    echo "Asegurando parámetros base y feriados oficiales..."
+    echo "Asegurando parámetros base, feriados, combustibles y estado de fuentes..."
     php artisan db:seed --class=ParametrosSeeder --force || true
-    php artisan db:seed --class=Feriados2026Seeder --force || true
+    php artisan db:seed --class=FeriadosSeeder --force || true
+    php artisan db:seed --class=CombustiblesSeeder --force || true
+    php artisan db:seed --class=FuentesEstadoSeeder --force || true
 
     echo "Sincronizando datos externos iniciales (Dólar, Sismos, Feriados)..."
     php artisan dolar:sincronizar || true
